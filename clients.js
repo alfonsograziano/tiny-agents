@@ -1,5 +1,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { config } from "dotenv";
+config();
 
 const clients = {};
 // The client name is used to identify the intenrnal client for interactions with the user
@@ -15,7 +17,7 @@ const serverConfigs = [
     }),
   },
   {
-    name: "filesystem-docker",
+    name: "filesystem",
     transport: new StdioClientTransport({
       command: "docker",
       args: [
@@ -28,6 +30,65 @@ const serverConfigs = [
         "/projects",
       ],
       env: { PATH: process.env.PATH },
+    }),
+  },
+  {
+    name: "fetch",
+    transport: new StdioClientTransport({
+      command: "docker",
+      args: ["run", "-i", "--rm", "mcp/fetch"],
+      env: { PATH: process.env.PATH },
+    }),
+  },
+  {
+    name: "memory",
+    transport: new StdioClientTransport({
+      command: "docker",
+      args: [
+        "run",
+        "-i",
+        "-v",
+        "claude-memory:/app/dist",
+        "--rm",
+        "mcp/memory",
+      ],
+      env: { PATH: process.env.PATH },
+    }),
+  },
+  {
+    name: "sequentialthinking",
+    transport: new StdioClientTransport({
+      command: "docker",
+      args: ["run", "--rm", "-i", "mcp/sequentialthinking"],
+      env: { PATH: process.env.PATH },
+    }),
+  },
+  {
+    name: "brave-search",
+    transport: new StdioClientTransport({
+      command: "docker",
+      args: [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        `BRAVE_API_KEY=${process.env.BRAVE_API_KEY}`,
+        "mcp/brave-search",
+      ],
+      env: {
+        PATH: process.env.PATH,
+        BRAVE_API_KEY: process.env.BRAVE_API_KEY,
+      },
+    }),
+  },
+  {
+    name: "time",
+    transport: new StdioClientTransport({
+      command: "docker",
+      args: ["run", "-i", "--rm", "mcp/time"],
+      env: {
+        PATH: process.env.PATH,
+      },
     }),
   },
 ];
