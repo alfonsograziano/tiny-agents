@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  filesystem-mcp-server:
+    image: mcp/filesystem
+    container_name: filesystem-mcp-server
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - /Users/alfonsograziano/Desktop/experiments/tiny-agents:/projects
+    command: /projects
+    restart: unless-stopped
