@@ -1,6 +1,6 @@
 # 🛠️ MCP Tool Runner
 
-This project is an AI-powered agent that connects to multiple MCP servers, uses available tools dynamically, and processes complex prompts intelligently using OpenAI's API.
+This project is an AI-powered agent that connects to multiple MCP servers, uses available tools dynamically, and processes complex prompts intelligently using OpenAI's API. This repo has been inspired by Huggingface [Tiny Agents](https://huggingface.co/blog/tiny-agents)
 
 It can:
 
