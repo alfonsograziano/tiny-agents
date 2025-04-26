@@ -7,7 +7,14 @@ import path from "path";
 
 config();
 
-const MAX_INTERACTIONS = parseInt(process.env.MAX_INTERACTIONS, 10) || 20;
+const input =
+  "What is the current time and date? write a js script to print the current time"; //process.argv[2];
+if (!input) {
+  console.error("Please provide a prompt as input.");
+  process.exit(1);
+}
+
+const MAX_INTERACTIONS = parseInt(process.env.MAX_INTERACTIONS, 10) || 10;
 
 async function main() {
   const clients = await initializeClients();
@@ -39,15 +46,15 @@ async function main() {
     },
     {
       role: "user",
-      content:
-        "Write the current time in a file named current_time.txt. Then, read the file and tell me the time.",
+      content: input,
     },
   ];
 
   let interactionCount = 0;
-  let taskComplete = false;
 
-  while (interactionCount < MAX_INTERACTIONS && !taskComplete) {
+  let taskCompleteAck = 0;
+
+  while (interactionCount < MAX_INTERACTIONS && taskCompleteAck < 2) {
     interactionCount++;
     console.log(`\n--- Interaction #${interactionCount} ---`);
 
@@ -67,9 +74,14 @@ async function main() {
         const args = JSON.parse(toolCall.function.arguments || "{}");
 
         if (functionName === "task_complete") {
-          taskComplete = true;
-          console.log("Task complete. Exiting...");
-          break;
+          taskCompleteAck++;
+          messages.push({
+            type: "function_call_output",
+            tool_call_id: toolCall.id,
+            content: "",
+            role: "tool",
+          });
+          continue;
         }
 
         if (functionName === "ask_question") {
@@ -113,6 +125,7 @@ async function main() {
 
     fs.writeFileSync(filepath, JSON.stringify(data, null, 2), "utf-8");
     console.log(`Saved conversation and tools to ${filepath}`);
+    process.exit(0);
   } catch (err) {
     console.error("Failed to save output file:", err);
   }

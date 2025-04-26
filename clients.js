@@ -1,6 +1,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { config } from "dotenv";
+
 config();
 
 const clients = {};
@@ -82,10 +83,17 @@ const serverConfigs = [
     }),
   },
   {
-    name: "time",
+    name: "run_js",
     transport: new StdioClientTransport({
       command: "docker",
-      args: ["run", "-i", "--rm", "mcp/time"],
+      args: [
+        "run",
+        "-i",
+        "--rm",
+        "-v",
+        "/var/run/docker.sock:/var/run/docker.sock",
+        "alfonsograziano/node-code-sandbox-mcp",
+      ],
       env: {
         PATH: process.env.PATH,
       },
