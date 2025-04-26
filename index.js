@@ -7,16 +7,9 @@ import path from "path";
 
 config();
 
-const input =
-  "What is the current time and date? write a js script to print the current time"; //process.argv[2];
-if (!input) {
-  console.error("Please provide a prompt as input.");
-  process.exit(1);
-}
-
 const MAX_INTERACTIONS = parseInt(process.env.MAX_INTERACTIONS, 10) || 10;
 
-async function main() {
+async function main(input) {
   const clients = await initializeClients();
   const availableTools = await getTools(clients);
 
@@ -131,6 +124,11 @@ async function main() {
   }
 }
 
-main().catch((error) => {
+const input = process.argv.slice(2).join(" ");
+if (!input) {
+  console.error("Please provide an input string.");
+  process.exit(1);
+}
+main(input).catch((error) => {
   console.error("Error:", error);
 });

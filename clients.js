@@ -99,6 +99,16 @@ const serverConfigs = [
       },
     }),
   },
+  {
+    name: "time",
+    transport: new StdioClientTransport({
+      command: "docker",
+      args: ["run", "-i", "--rm", "mcp/time"],
+      env: {
+        PATH: process.env.PATH,
+      },
+    }),
+  },
 ];
 
 export async function initializeClients() {
